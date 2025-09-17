@@ -46,7 +46,7 @@
 	 */
 	"ai": {
 		"binding": "AI",
-        "experimental_remote": true
+        "remote": true
 	},
 	"browser": {
 		"binding": "BROWSER"
@@ -58,7 +58,7 @@
         {
             "binding": "DISPATCHER",
             "namespace": "vibesdk-default-namespace",
-            "experimental_remote": true
+            "remote": true
         }
     ],
 	"containers": [
@@ -82,7 +82,7 @@
 			"database_name": "vibesdk-db",
 			"database_id": "YOUR_D1_DATABASE_ID",
 			"migrations_dir": "migrations",
-			"experimental_remote": true
+			"remote": true
 		}
 	],
 	"durable_objects": {
@@ -105,14 +105,14 @@
       {
         "binding": "TEMPLATES_BUCKET",
         "bucket_name": "vibesdk-templates",
-        "experimental_remote": true
+        "remote": true
       }
     ],
     "kv_namespaces": [
         {
             "binding": "VibecoderStore",
             "id": "YOUR_KV_NAMESPACE_ID",
-            "experimental_remote": true
+            "remote": true
         }
     ],
 	"migrations": [
