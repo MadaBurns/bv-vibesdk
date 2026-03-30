@@ -1,0 +1,102 @@
+# Gitleaks configuration for bv-vibesdk
+# Extends built-in rules with infrastructure ID and PII detection.
+
+title = "bv-vibesdk secret and infrastructure ID detection"
+
+[extend]
+useDefault = true
+
+# ─── Infrastructure ID Rules ────────────────────────────────────────
+
+[[rules]]
+id = "cloudflare-d1-database-id"
+description = "Cloudflare D1 Database ID (UUID format in binding context)"
+regex = '''(?i)(?:database[_\-]?id)\s*[=:"]\s*["']?([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})["']?'''
+keywords = ["database_id", "database-id"]
+[rules.allowlist]
+regexTarget = "match"
+regexes = [
+  '''YOUR_D1_DATABASE_ID''',
+]
+
+[[rules]]
+id = "cloudflare-kv-namespace-id"
+description = "Cloudflare KV Namespace ID (32-char hex in binding context)"
+regex = '''(?i)(?:"id"|namespace[_\-]?id)\s*[=:]\s*["']?([0-9a-f]{32})["']?'''
+keywords = ["namespace", "kv", "\"id\""]
+[rules.allowlist]
+regexTarget = "match"
+regexes = [
+  '''YOUR_KV_NAMESPACE_ID''',
+]
+
+[[rules]]
+id = "cloudflare-zone-id"
+description = "Cloudflare Zone ID (32-char hex)"
+regex = '''(?i)zone[_\-]?id\s*[=:"]\s*["']?([0-9a-f]{32})["']?'''
+keywords = ["zone_id", "zone-id"]
+[rules.allowlist]
+regexTarget = "match"
+regexes = [
+  '''YOUR_ZONE_ID''',
+]
+
+[[rules]]
+id = "cloudflare-account-id"
+description = "Cloudflare Account ID (32-char hex)"
+regex = '''(?i)(?:account[_\-]?id|CLOUDFLARE_ACCOUNT)\s*[=:]\s*["']?([0-9a-f]{32})["']?'''
+keywords = ["account"]
+
+[[rules]]
+id = "internal-container-registry"
+description = "Internal container registry reference"
+regex = '''registry\.cloudflare\.com/vibesdk'''
+keywords = ["registry.cloudflare.com"]
+
+[[rules]]
+id = "internal-staging-domain"
+description = "Cloudflare internal staging domain"
+regex = '''cfdata\.org'''
+keywords = ["cfdata"]
+
+[[rules]]
+id = "private-deploy-config"
+description = "Private deploy config should not be committed"
+path = '''\.dev/'''
+
+# ─── Built-in Rule Overrides ────────────────────────────────────────
+
+[[rules]]
+id = "generic-api-key"
+description = "Generic API Key (override to allowlist test fixtures)"
+regex = '''(?i)(?:key|api|token|secret|client|passwd|password|auth|access)(?:[0-9a-z\-_\t .]{0,20})(?:[\s|']|[\s|"]){0,3}(?:=|>|:{1,3}=|\|\|:|<=|=>|:|\?=)(?:'|\"|\s|=|\x60){0,5}([0-9a-z\-_.=]{10,150})(?:['|\"|\n|\r|\s|\x60|;]|$)'''
+keywords = ["key","api","token","secret","client","passwd","password","auth","access"]
+[rules.allowlist]
+paths = [
+  '''test/''',
+  '''sdk/README\.md$''',
+]
+
+[[rules]]
+id = "stripe-access-token"
+description = "Stripe Access Token (override to allowlist test fixtures)"
+regex = '''sk_(test|live)_[0-9a-zA-Z]{10,99}'''
+keywords = ["sk_test", "sk_live"]
+[rules.allowlist]
+paths = [
+  '''test/''',
+]
+
+# ─── Global Allowlists ──────────────────────────────────────────────
+
+[allowlist]
+paths = [
+  '''\.gitleaks\.toml$''',
+  '''node_modules/''',
+  '''bun\.lock$''',
+  '''package-lock\.json$''',
+  '''\.wrangler/''',
+  '''coverage/''',
+  '''dist/''',
+  '''\.dev/''',
+]

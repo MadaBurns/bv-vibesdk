@@ -1,0 +1,5 @@
+# Infrastructure leakage patterns for pre-commit hook
+# Each line is an extended regex. Lines starting with # are ignored.
+registry\.cloudflare\.com/vibesdk
+cfdata\.org
+orange-build
